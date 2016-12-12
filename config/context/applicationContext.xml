@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+			http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+			http://www.springframework.org/schema/context 
+			http://www.springframework.org/schema/context/spring-context-4.2.xsd
+			http://www.springframework.org/schema/aop 
+			http://www.springframework.org/schema/aop/spring-aop-4.2.xsd
+			http://www.springframework.org/schema/tx 
+			http://www.springframework.org/schema/tx/spring-tx-4.2.xsd
+			http://www.springframework.org/schema/mvc 
+			http://www.springframework.org/schema/mvc/spring-mvc-4.2.xsd
+			http://www.springframework.org/schema/context 
+			http://www.springframework.org/schema/context/spring-context-4.2.xsd">
+    <!--
+        使Spring支持自动检测组件，如注解的Controller
+    -->
+  	<mvc:annotation-driven validator="validator"/>
+    <context:component-scan base-package="com.wangzhe"/> 
+    
+    <!-- 以下 validator  ConversionService 在使用 mvc:annotation-driven 会 自动注册-->  
+	<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">  
+    	<property name="providerClass" value="org.hibernate.validator.HibernateValidator"/>  
+	</bean>  
+  
+    <bean id="viewResolver"
+          class="org.springframework.web.servlet.view.InternalResourceViewResolver"
+          p:prefix="/"
+          p:suffix=".jsp"> 
+        <property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />
+    </bean>
+            
+   	<mvc:resources location="/resources/" mapping="/resources/**"></mvc:resources>
+   	
+   <mvc:interceptors>
+   		<mvc:interceptor>
+   			<mvc:mapping path="/*"/>
+   			<mvc:exclude-mapping path="/addUser"/>
+   			<mvc:exclude-mapping path="/login"/> 
+   			<bean class="com.wangzhe.interceptor.DefaultInterceptor"></bean>
+   		</mvc:interceptor>
+   	</mvc:interceptors> 
+          
+  	<!--   数据源连接池 -->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
+		<property name="url" value="jdbc:mysql://localhost:3306/wechat"></property>
+		<property name="username" value="wangzhe"></property>
+		<property name="password" value="wang920912"></property>
+		<!--  初始化连接数  -->
+		<property name="initialSize" value="1" />
+		<!--  最大活动连接数 -->
+		<property name="maxActive" value="5" />
+		<!--  最大空闲连接数-->
+		<property name="maxIdle" value="2" />
+		<!--  最小空闲连接数-->
+		<property name="minIdle" value="1" />
+		<!-- 获取连接超时等待时间(毫秒) -->
+		<property name="maxWait" value="-1" />
+		<!--空闲池空闲连接激活线程的运行间隔时间（毫秒）-->
+		<property name="timeBetweenEvictionRunsMillis" value="20000" />
+		<!--空闲池中空闲连接能够被激活前的最小空闲时间（毫秒）-->
+		<property name="minEvictableIdleTimeMillis" value="10000" />
+	</bean>
+	
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"></property>
+		<property name="packagesToScan">
+			<list>
+				<value>com.wangzhe.bean</value>
+			</list>
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.current_sesscion_context_class">thread</prop>
+			</props>
+		</property>
+	</bean>
+	
+	<tx:annotation-driven transaction-manager="transactionManager"/>   
+	
+	<bean id="transactionManager"
+	     class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+         
+</beans>

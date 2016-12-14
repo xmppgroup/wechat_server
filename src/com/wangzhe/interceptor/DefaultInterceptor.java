@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.wangzhe.bean.UserBean;
 import com.wangzhe.exception.TokenException;
 import com.wangzhe.response.BaseResponse;
 import com.wangzhe.service.TokenService;
@@ -41,8 +42,10 @@ public class DefaultInterceptor implements HandlerInterceptor{
 		}else if (resultCode == BaseResponse.TOKEN_EXPIRED) {
 			throw new TokenException(BaseResponse.TOKEN_EXPIRED, "token_expired");
 		}else {
-			String userName = (String) result.get("userName");
-			request.setAttribute("userName", userName);
+			Integer userId = (Integer) result.get(UserBean.USERID);
+			String userName = (String) result.get(UserBean.USERNAME);
+			request.setAttribute(UserBean.USERID, userId);
+			request.setAttribute(UserBean.USERNAME, userName);
 		}
 		return true;
 	}

@@ -44,6 +44,14 @@ public class UserDao extends DaoSupportImpl<UserBean> {
 		return false;
 	}
 	
+	public boolean isUserExist(Integer userId){
+		Criteria criteria = currentSession().createCriteria(UserBean.class).add(Restrictions.eq(UserBean.USERID, userId));
+		if(criteria.list().size()>0){
+			return true;
+		}
+		return false;
+	}
+	
 	@SuppressWarnings("unchecked")
 	public List<UserBean> searchUserByM(String search){
 		Criteria criteria = currentSession().createCriteria(UserBean.class).

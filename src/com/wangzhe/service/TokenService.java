@@ -8,7 +8,7 @@ import com.wangzhe.bean.UserBean;
 import com.wangzhe.response.TokenResponse;
 
 public interface TokenService {
-	public String newToken(String userName);
+	public String newToken(Integer userId, String userName);
 	
 	public Map<String, Object> checkToken(String token);
 	

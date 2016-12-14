@@ -60,7 +60,7 @@ public class UserController extends BaseController{
 		}
 		userBean = userService.getUserByParams(userBean);
 		if(userBean != null){
-			String token = tokenService.newToken(userBean.getUserName());
+			String token = tokenService.newToken(userBean.getUserId(), userBean.getUserName());
 			loginResponse = new LoginResponse(0, "success", token, userBean);
 		}else{
 			loginResponse = new LoginResponse(1, "userName or passWord is not right", null);
@@ -92,7 +92,7 @@ public class UserController extends BaseController{
 			@RequestParam("field") String field, @RequestParam("value") Object value){
 		UserResponse response = null;
 		boolean canUpdate = true;
-		if(field.equals("") || field.equals(UserBean.USERNAME) || field.equals(UserBean.ID)
+		if(field.equals("") || field.equals(UserBean.USERNAME) || field.equals(UserBean.USERID)
 				|| field.equals(UserBean.CREATEDATE) || field.equals(UserBean.MODIFYDATE)){
 			response = new UserResponse(1, "refuse_modify", null);
 			canUpdate = false;

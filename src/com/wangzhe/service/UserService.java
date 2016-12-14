@@ -15,6 +15,7 @@ public interface UserService {
 	public List<UserBean> exportUser(String []ids);
 	public void bulkDelUser(String []ids);
 	public boolean isUserExist(String loginname);
+	public boolean isUserExist(Integer userId);
 	public String addUser(UserBean user);
 	public UserBean getUserByParams(UserBean user);
 	public List<UserBean> getAllUserByParams(UserBean user);

@@ -74,6 +74,10 @@ public class UserServiceImpl implements UserService{
 		return userDao.isUserExist(loginname);
 	}
 	
+	public boolean isUserExist(Integer userId) {
+		return userDao.isUserExist(userId);
+	}
+	
 	@Transactional
 	public String addUser(UserBean user) {
 		if(this.isUserExist(user.getUserName())){
@@ -131,13 +135,6 @@ public class UserServiceImpl implements UserService{
 		}
 		return userDao.getUsersByNames(userNames);
 	}
-
-	
-
-	
-	
-	
-
 	
 	
 

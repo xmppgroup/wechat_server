@@ -23,7 +23,7 @@ import com.wangzhe.util.CustomDateSerialize;
 @JsonIgnoreProperties(value = "passWord")
 public class UserBean {
 	
-	public static final String ID = "id";
+	public static final String USERID = "userId";
 	public static final String USERNAME = "userName";
 	public static final String PASSWORD = "passWord";
 	public static final String NICKNAME = "nickName";

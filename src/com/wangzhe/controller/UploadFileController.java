@@ -3,6 +3,7 @@ package com.wangzhe.controller;
 import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,6 +24,7 @@ import com.wangzhe.response.UploadFileResponse;
 import com.wangzhe.response.UserResponse;
 import com.wangzhe.service.UserService;
 import com.wangzhe.util.Config;
+import com.wangzhe.util.UploadFileUtil;
 
 @EnableWebMvc
 @Controller
@@ -52,32 +54,11 @@ public class UploadFileController extends BaseController{
         if(multipartResolver.isMultipart(request)){  
             //转换成多部分request    
             MultipartHttpServletRequest multiRequest = multipartResolver.resolveMultipart(request);
-            //取得request中的所有文件名  
-            Iterator<String> iter = multiRequest.getFileNames();  
-            String newFileName = null;
-            while(iter.hasNext()){  
-                //记录上传过程起始时的时间，用来计算上传时间  
-                int pre = (int) System.currentTimeMillis();  
-                //取得上传文件  
-                MultipartFile file = multiRequest.getFile(iter.next());  
-                if(file != null){  
-                    //取得当前上传文件的文件名称  
-                    String myFileName = file.getOriginalFilename();  
-                    //如果名称不为“”,说明该文件存在，否则说明该文件不存在  
-                    if(myFileName.trim() !=""){                 
-                        //重命名上传后的文件名                    	                   	               
-                        newFileName = getNewFileName(userName, file.getOriginalFilename()); 
-                        //定义上传路径  
-                       	String path = FILE_PATH + newFileName; 
-                       
-                        File localFile = new File(path);  
-                        file.transferTo(localFile);  
-                    }  
-                }  
-            }  
+            
+            List<String> fileNames = UploadFileUtil.saveFile(multiRequest);
               
             UserBean updateUserBean = 
-            		userService.updateUser(userName, UserBean.HEADURL, newFileName);
+            		userService.updateUser(userName, UserBean.HEADURL, fileNames.get(0));
             response = new UserResponse(0, "success", updateUserBean);
         }
         

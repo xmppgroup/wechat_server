@@ -24,8 +24,8 @@ public class UserDao extends DaoSupportImpl<UserBean> {
 	private static final String GET_UPDATE_DATA =
 			"SELECT t.* FROM ( " +
 			"SELECT t1.* FROM (select u.* from wcuser u, wcfriend r where " +
-			"(r.ownerName = ? and u.userName = r.contactName) and (r.subType = 'both' or r.subType = 'from')) t1" +
-			" UNION SELECT u.* from wcuser u WHERE u.userName = ?) t where t.modifyDate > ? order by t.modifyDate";
+			"(r.ownerId = ? and u.userId = r.contactId) and (r.subType = 'both' or r.subType = 'from')) t1" +
+			" UNION SELECT u.* from wcuser u WHERE u.userId = ?) t where t.modifyDate > ? order by t.modifyDate";
 	
 	
 	
@@ -73,10 +73,10 @@ public class UserDao extends DaoSupportImpl<UserBean> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<UserBean> getMyFriendsByModifyDate(String userName, long modifyDate) {
+	public List<UserBean> getMyFriendsByModifyDate(Integer userId, long modifyDate) {
 		SQLQuery sqlQuery = currentSession().createSQLQuery(GET_UPDATE_DATA);
-		sqlQuery.setString(0, userName);
-		sqlQuery.setString(1, userName);
+		sqlQuery.setInteger(0, userId);
+		sqlQuery.setInteger(1, userId);
 		sqlQuery.setLong(2, modifyDate);
 		
 		sqlQuery.setResultTransformer(resultTransformer);

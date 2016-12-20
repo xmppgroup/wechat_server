@@ -17,8 +17,8 @@ import javax.persistence.Table;
 @Table(name="wcfriend")
 public class FriendBean{
 	public static final String FRIEND_ID = "friendId";
-	public static final String OWNER_NAME = "ownerName";
-	public static final String CONTACT_NAME = "contactName";
+	public static final String OWNER_ID = "ownerId";
+	public static final String CONTACT_ID = "contactId";
 	public static final String SUB_TYPE = "subType";
 	public static final String REMARK = "remark";
 	public static final String FLAG = "flag";
@@ -42,8 +42,8 @@ public class FriendBean{
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
     private Integer friendId;
-    private String ownerName;
-    private String contactName;
+    private Integer ownerId;
+    private Integer contactId;
     private String subType;
     private String remark;
     private Integer flag;
@@ -61,20 +61,20 @@ public class FriendBean{
 		this.friendId = friendId;
 	}
 
-    public String getOwnerName() {
-        return ownerName;
+    public Integer getOwnerId() {
+        return ownerId;
     }
 
-    public void setOwnerName(String ownerName) {
-        this.ownerName = ownerName;
+    public void setOwnerId(Integer ownerId) {
+        this.ownerId = ownerId;
     }
 
-    public String getContactName() {
-        return contactName;
+    public Integer getContactId() {
+        return contactId;
     }
 
-    public void setContactName(String contactName) {
-        this.contactName = contactName;
+    public void setContactName(Integer contactId) {
+        this.contactId = contactId;
     }
 
     public String getSubType() {

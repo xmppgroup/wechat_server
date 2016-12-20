@@ -4,6 +4,8 @@ package com.wangzhe.dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.Query;
+import org.hibernate.SQLQuery;
 import org.springframework.stereotype.Repository;
 
 import com.wangzhe.bean.DynamicBean;
@@ -16,14 +18,40 @@ import com.wangzhe.dao.base.WhereItem;
 @Repository
 public class DynamicDao extends DaoSupportImpl<DynamicBean>{
 	
-	public DynamicBean getFriendByName(String ownerName, String contactName){
-		List<WhereItem> whereItems = new ArrayList<WhereItem>();
-		whereItems.add(new WhereItem(FriendBean.OWNER_NAME, "=", ownerName));
-		whereItems.add(new WhereItem(FriendBean.CONTACT_NAME, "=", contactName));
-		whereItems.add(new WhereItem(FriendBean.FLAG, "=", Flag.VALID.value()));
-		whereItems.add(new WhereItem(FriendBean.SUB_TYPE, "!=", SubType.NONE.toString()));
+	private static final String QUERY_LATEST_DYNAMICS =
+		"SELECT * FROM wcdynamic WHERE (publisherId IN(SELECT contactId FROM wcfriend WHERE ownerId = ? AND subType = 'both')"
+			+ " OR publisherId = ?) LIMIT ? ORDER BY dynamicId DESC";
+	
+	private static final String QUERY_DYNAMICS_BY_PAGE =
+			"SELECT * FROM wcdynamic WHERE (publisherId IN(SELECT contactId FROM wcfriend WHERE ownerId = ? AND subType = 'both')"
+				+ " OR publisherId = ?) AND dynamicId < ? LIMIT ? ORDER BY dynamicId DESC";
+	
+	/**
+	 * 用户拉取朋友圈最新动态，按createDate时间倒序返回
+	 * @param ownerId
+	 * @param limit
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<DynamicBean> getLatestDynamicBeans(Integer ownerId, int limit){
+		SQLQuery sqlQuery = currentSession().createSQLQuery(QUERY_LATEST_DYNAMICS);
+		sqlQuery.setInteger(0, ownerId);
+		sqlQuery.setInteger(1, ownerId);
+		sqlQuery.setInteger(2, limit);
 		
-		return getTByParams(whereItems);
+		sqlQuery.setResultTransformer(resultTransformer);
+		return sqlQuery.list();
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<DynamicBean> getDynamisByPage(Integer userId, int dynamicId, int limit){
+		SQLQuery sqlQuery = currentSession().createSQLQuery(QUERY_LATEST_DYNAMICS);
+		sqlQuery.setInteger(0, userId);
+		sqlQuery.setInteger(1, userId);
+		sqlQuery.setInteger(2, dynamicId);
+		sqlQuery.setInteger(3, limit);
+		
+		sqlQuery.setResultTransformer(resultTransformer);
+		return sqlQuery.list();
+	}
 }

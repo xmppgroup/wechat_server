@@ -16,7 +16,7 @@ public interface DaoSupport<T> {
 	public T getTBySqlQuery(String sqlQuery);
 	public List<T> getAllBySqlQuery(String sqlQuery);
 	public void updateObj(T t);
-	public void addObj(T t);
+	public Integer addObj(T t);
 	public void deleteObj(int id);	
 	public List<T> getObjByPaging(Paging<T> paging);
 	public Class<?> getSuperClassGenricType();

@@ -21,9 +21,11 @@ import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.wangzhe.bean.DynamicBean;
+import com.wangzhe.bean.FriendBean;
 import com.wangzhe.bean.UserBean;
 import com.wangzhe.response.AddDynamicResponse;
 import com.wangzhe.response.BaseResponse;
+import com.wangzhe.response.GetFriendsResponse;
 import com.wangzhe.service.DynamicService;
 import com.wangzhe.service.UserService;
 import com.wangzhe.util.UploadFileUtil;
@@ -32,11 +34,13 @@ import com.wangzhe.util.UploadFileUtil;
 @EnableWebMvc
 //@RequestMapping("/dynamic") 
 public class DynamicController extends BaseController{
+	private static final int DEF_LIMIT = 10; //一次拉取10条数据
+	
 	@Autowired
 	private DynamicService dynamicService;
 	
 	@RequestMapping(value = "/addDynamic", method = RequestMethod.POST)
-	public @ResponseBody BaseResponse addDynamic(HttpServletRequest request) 
+	public @ResponseBody BaseResponse<DynamicBean> addDynamic(HttpServletRequest request) 
 			throws IllegalStateException, IOException{
 		Integer userId = (Integer) request.getAttribute(UserBean.USERID);
 		
@@ -62,10 +66,29 @@ public class DynamicController extends BaseController{
         dynamicBean.setPublisherId(userId);
         dynamicBean.setContent(content);
         dynamicBean.setImages(images);
-        dynamicService.addDynamicBean(dynamicBean);
         
-        BaseResponse baseResponse = new BaseResponse(0, "success");
+        dynamicBean = dynamicService.addDynamicBean(dynamicBean);
+        
+        BaseResponse<DynamicBean> baseResponse = new BaseResponse<DynamicBean>(0, "success", dynamicBean);
         return baseResponse;
+	}
+	
+	@RequestMapping(value = "/getDynamicsByPage", method = RequestMethod.POST)
+	public @ResponseBody BaseResponse<List<DynamicBean>> getDynamicsByPage(HttpServletRequest request
+			, @RequestParam(value="action", required=false) int action, 
+			@RequestParam(value="dynamicId", required=false) int dynamicId,
+			@RequestParam(value="limit", required=false) int limit){
+		Integer userId = (Integer) request.getAttribute(UserBean.USERID);
+		
+		if(limit == 0){
+			limit = DEF_LIMIT;
+		}
+		
+		List<DynamicBean> dynamicBeans = 
+				dynamicService.getMyAndFriendDynamcis(userId, action, dynamicId, limit);
+		BaseResponse<List<DynamicBean>> baseResponse = 
+				new BaseResponse<List<DynamicBean>>(0, "success", dynamicBeans);
+		return baseResponse;
 	}
 	
 }

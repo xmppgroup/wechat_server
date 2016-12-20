@@ -24,21 +24,21 @@ public class FriendServiceImpl implements FriendService{
 	private FriendDao friendDao;
 
 	@Transactional
-	public List<FriendBean> getFriendsByOwnerName(String ownerName, long modifyDate) {
+	public List<FriendBean> getFriendsByOwner(Integer ownerId, long modifyDate) {
 		List<WhereItem> whereItems = new ArrayList<WhereItem>();
-		whereItems.add(new WhereItem(FriendBean.OWNER_NAME, "=", ownerName));
+		whereItems.add(new WhereItem(FriendBean.OWNER_ID, "=", ownerId));
 		whereItems.add(new WhereItem(FriendBean.MODIFY_DATE, ">", modifyDate));
 		return friendDao.getAllByParams(whereItems);
 	}
 
 	@Transactional
-	public void addOrUpdateFriends(String ownerName, String contactName, String remark, SubType subType) {
-		FriendBean existFriendBean = friendDao.getFriendByName(ownerName, contactName);
+	public void addOrUpdateFriends(Integer ownerId, Integer contactId, String remark, SubType subType) {
+		FriendBean existFriendBean = friendDao.getFriendByOwnerAndContact(ownerId, contactId);
 		
 		if(existFriendBean == null){
 			FriendBean friendBean = new FriendBean();
-			friendBean.setOwnerName(ownerName);
-			friendBean.setContactName(contactName);
+			friendBean.setOwnerId(ownerId);
+			friendBean.setContactName(contactId);
 			friendBean.setSubType(subType.toString());
 			friendBean.setRemark(remark);
 			friendBean.setModifyDate(BigInteger.valueOf(TimeUtil.getTime()));
@@ -54,11 +54,11 @@ public class FriendServiceImpl implements FriendService{
 	}
 	
 	@Transactional
-	public boolean isFriends(String ownerName, String contactName){
-		if(TextUtils.isEmpty(ownerName) || TextUtils.isEmpty(contactName)){
+	public boolean isFriends(Integer ownerId, Integer contactId){
+		if(ownerId == null || contactId == null){
 			return false;
 		}
-		return friendDao.getFriendByName(ownerName, contactName) != null;
+		return friendDao.getFriendByOwnerAndContact(ownerId, contactId, SubType.BOTH) != null;
 	}
 
 

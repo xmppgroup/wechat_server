@@ -8,9 +8,9 @@ import com.wangzhe.bean.FriendBean.SubType;
 import com.wangzhe.util.Paging;
 
 public interface FriendService {
-	public List<FriendBean> getFriendsByOwnerName(String ownerName, long lastModifyDate);
+	public List<FriendBean> getFriendsByOwner(Integer ownerId, long lastModifyDate);
 	
-	public void addOrUpdateFriends(String ownerName, String contactName, String remark, SubType subType);
+	public void addOrUpdateFriends(Integer ownerId, Integer contactId, String remark, SubType subType);
 	
-	public boolean isFriends(String ownerName, String contactName);
+	public boolean isFriends(Integer ownerId, Integer contactId);
 }

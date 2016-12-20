@@ -52,7 +52,7 @@
 		<property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
 		<property name="url" value="jdbc:mysql://localhost:3306/wechat"></property>
 		<property name="username" value="wangzhe"></property>
-		<property name="password" value="920912"></property>
+		<property name="password" value="wang920912"></property>
 		<!--  初始化连接数  -->
 		<property name="initialSize" value="1" />
 		<!--  最大活动连接数 -->

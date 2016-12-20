@@ -137,8 +137,9 @@ public class DaoSupportImpl<T> implements DaoSupport<T>{
 		sessionFactory.getCurrentSession().update(t);
 	}
 
-	public void addObj(T t) {
-		currentSession().save(t);
+	public Integer addObj(T t) {
+		Integer newId = (Integer) currentSession().save(t);
+		return newId;
 	}
 
 	public void deleteObj(int id) {

@@ -30,13 +30,13 @@ public class FriendController extends BaseController{
 	public @ResponseBody GetFriendsResponse getFriends(HttpServletRequest request, 
 			@RequestParam(value = "modifyDate", required = false) Long modifyDate){
 		GetFriendsResponse response = null;
-		String ownerName = (String) request.getAttribute("userName");
+		Integer ownerId = (Integer) request.getAttribute("userId");
 
 		long lastModifyDate = 0;
 		try{
 			lastModifyDate = modifyDate.longValue();
 		}catch(Exception e){}
-		List<FriendBean> friendBeans = friendService.getFriendsByOwnerName(ownerName, lastModifyDate);
+		List<FriendBean> friendBeans = friendService.getFriendsByOwner(ownerId, lastModifyDate);
 		response = new GetFriendsResponse(0, "success", friendBeans);
 
 		return response;
@@ -44,17 +44,17 @@ public class FriendController extends BaseController{
 	
 	@RequestMapping(value="/addFriend")
 	public @ResponseBody BaseResponse addFriends(HttpServletRequest request,
-			@RequestParam("contactName") String contactName){
-		String ownerName = (String) request.getAttribute("userName");
+			@RequestParam("contactName") Integer contactId){
+		Integer ownerId = (Integer) request.getAttribute("userId");
 		BaseResponse baseResponse = null;
-		if(TextUtils.isEmpty(contactName) || ownerName.equals(contactName)){
+		if(ownerId == null || contactId == null){
 			baseResponse = new BaseResponse(1, "invalid_conactname");
 		}else {
-			if(friendService.isFriends(ownerName, contactName)){
+			if(friendService.isFriends(ownerId, contactId)){
 				baseResponse = new BaseResponse(2, "have_been_friends");
 			}else {
-				friendService.addOrUpdateFriends(ownerName, contactName, null, SubType.BOTH);
-				friendService.addOrUpdateFriends(contactName, ownerName, null, SubType.BOTH);
+				friendService.addOrUpdateFriends(ownerId, contactId, null, SubType.BOTH);
+				friendService.addOrUpdateFriends(contactId, ownerId, null, SubType.BOTH);
 				baseResponse = new BaseResponse(0, "success");
 			}
 		}

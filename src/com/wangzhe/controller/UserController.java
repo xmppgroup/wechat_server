@@ -143,7 +143,7 @@ public class UserController extends BaseController{
 	public @ResponseBody SyncUserResponse syncUser(HttpServletRequest request, 
 			@RequestParam(value = "userNames[]", required = false) String[] userNames, 
 			@RequestParam("modifyDate") Long modifyDate){
-		Integer userId = (Integer) request.getAttribute("userName");
+		Integer userId = (Integer) request.getAttribute(UserBean.USERID);
 		
 		List<UserBean> userBeans = userService.getUsersByNames(userNames);
 		List<UserBean> updatedData = userService.getUpdatedData(userId, modifyDate);

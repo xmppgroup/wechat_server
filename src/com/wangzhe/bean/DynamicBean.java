@@ -12,6 +12,10 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.wangzhe.util.CustomDateSerialize;
+
 
 /**
  * Created by 王宗文 on 2016/6/20.
@@ -33,6 +37,7 @@ public class DynamicBean{
 	private Integer publisherId;// 发表人
 	private String content;// 动态内容
 	private String images;// 图片
+	@JsonSerialize(using = CustomDateSerialize.class)
 	private Date createDate; //创建日期
 	private BigInteger modifyDate;///修改信息日期
 	@Transient

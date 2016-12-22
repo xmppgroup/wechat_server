@@ -9,7 +9,9 @@ import com.wangzhe.bean.FriendBean.SubType;
 import com.wangzhe.util.Paging;
 
 public interface DynamicService {
-	public DynamicBean addDynamicBean(DynamicBean dynamic);
+	public Integer addDynamicBean(DynamicBean dynamic);
+	
+	public DynamicBean getDynamicById(Integer dynamicId);
 	
 	public List<DynamicBean> getMyAndFriendDynamcis(Integer userId, int action,
 			int dynamicId, int limit);	

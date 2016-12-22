@@ -67,7 +67,8 @@ public class DynamicController extends BaseController{
         dynamicBean.setContent(content);
         dynamicBean.setImages(images);
         
-        dynamicBean = dynamicService.addDynamicBean(dynamicBean);
+        Integer dynamicId = dynamicService.addDynamicBean(dynamicBean);
+        dynamicBean = dynamicService.getDynamicById(dynamicId);
         
         BaseResponse<DynamicBean> baseResponse = new BaseResponse<DynamicBean>(0, "success", dynamicBean);
         return baseResponse;

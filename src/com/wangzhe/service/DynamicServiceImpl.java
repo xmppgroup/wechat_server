@@ -24,10 +24,15 @@ public class DynamicServiceImpl implements DynamicService {
 	private UserDao userDao;
 
 	@Transactional
-	public DynamicBean addDynamicBean(DynamicBean dynamic) {
+	public Integer addDynamicBean(DynamicBean dynamic) {
 		dynamic.setModifyDate(BigInteger.valueOf(TimeUtil.getTime()));
 		Integer newId = dynamicDao.addObj(dynamic);
-		return dynamicDao.getObjById(newId);
+		return newId;
+	}
+	
+	@Transactional
+	public DynamicBean getDynamicById(Integer dynamicId){
+		return dynamicDao.getObjById(dynamicId);
 	}
 
 	public List<DynamicBean> getMyAndFriendDynamcis(Integer userId, int action,

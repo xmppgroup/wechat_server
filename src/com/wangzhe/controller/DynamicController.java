@@ -76,9 +76,9 @@ public class DynamicController extends BaseController{
 	
 	@RequestMapping(value = "/getDynamicsByPage", method = RequestMethod.POST)
 	public @ResponseBody BaseResponse<List<DynamicBean>> getDynamicsByPage(HttpServletRequest request
-			, @RequestParam(value="action", required=false) int action, 
-			@RequestParam(value="dynamicId", required=false) int dynamicId,
-			@RequestParam(value="limit", required=false) int limit){
+			, @RequestParam(value="action", defaultValue="0") Integer action, 
+			@RequestParam(value="dynamicId", defaultValue="0") Integer dynamicId,
+			@RequestParam(value="limit", defaultValue="0") Integer limit){
 		Integer userId = (Integer) request.getAttribute(UserBean.USERID);
 		
 		if(limit == 0){

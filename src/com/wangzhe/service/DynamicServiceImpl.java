@@ -35,6 +35,7 @@ public class DynamicServiceImpl implements DynamicService {
 		return dynamicDao.getObjById(dynamicId);
 	}
 
+	@Transactional
 	public List<DynamicBean> getMyAndFriendDynamcis(Integer userId, int action,
 			int dynamicId, int limit) {
 		if(action == ACTION_REFRESH){
@@ -45,12 +46,12 @@ public class DynamicServiceImpl implements DynamicService {
 					return null; //客户端传过来的id和查询到的id是一致的，说明没有新数据需要返回。
 				}
 			}
+			return latestDynamics;
 		}else {
 			List<DynamicBean> loadMoreDynamicBeans =
 					dynamicDao.getDynamisByPage(userId, dynamicId, limit);
 			return loadMoreDynamicBeans;
 		}
-		return null;
 	}
 
 }

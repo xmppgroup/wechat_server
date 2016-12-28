@@ -4,14 +4,9 @@ import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 
-import org.apache.commons.logging.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,13 +16,9 @@ import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.wangzhe.bean.DynamicBean;
-import com.wangzhe.bean.FriendBean;
 import com.wangzhe.bean.UserBean;
-import com.wangzhe.response.AddDynamicResponse;
 import com.wangzhe.response.BaseResponse;
-import com.wangzhe.response.GetFriendsResponse;
 import com.wangzhe.service.DynamicService;
-import com.wangzhe.service.UserService;
 import com.wangzhe.util.UploadFileUtil;
 
 @Controller

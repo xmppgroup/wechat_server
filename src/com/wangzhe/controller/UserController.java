@@ -2,19 +2,10 @@ package com.wangzhe.controller;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import io.jsonwebtoken.Jwt;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-
-
-
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -27,15 +18,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import com.wangzhe.bean.TokenUserBean;
 import com.wangzhe.bean.UserBean;
 import com.wangzhe.net.Xmpp;
 import com.wangzhe.response.BaseResponse;
-import com.wangzhe.response.LoginResponse;
-import com.wangzhe.response.RegisterResponse;
-import com.wangzhe.response.SearchUserResponse;
-import com.wangzhe.response.SyncUserResponse;
-import com.wangzhe.response.UserListResponse;
-import com.wangzhe.response.UserResponse;
+import com.wangzhe.response.RegisterBean;
 import com.wangzhe.service.TokenService;
 import com.wangzhe.service.UserService;
 import com.wangzhe.util.keyUtil;
@@ -52,54 +39,60 @@ public class UserController extends BaseController{
 	private TokenService tokenService;
 	
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public @ResponseBody LoginResponse login(@Valid @ModelAttribute("user") UserBean userBean, BindingResult bindingResult){
-		LoginResponse loginResponse = null;
+	public @ResponseBody BaseResponse<TokenUserBean> login(@Valid @ModelAttribute("user") UserBean userBean, BindingResult bindingResult){
+		BaseResponse<TokenUserBean> loginResponse = null;
 		if(bindingResult.hasErrors()){
-			loginResponse = new LoginResponse(1, "userName or passWord is not right", null);
+			loginResponse = new BaseResponse<TokenUserBean>(1, "userName or passWord is not right", null);
 			return loginResponse;
 		}
 		userBean = userService.getUserByParams(userBean);
+		
 		if(userBean != null){
+			TokenUserBean tokenUserBean = new TokenUserBean();
 			String token = tokenService.newToken(userBean.getUserId(), userBean.getUserName());
-			loginResponse = new LoginResponse(0, "success", token, userBean);
+			tokenUserBean.setUserBean(userBean);
+			tokenUserBean.setToken(token);
+			loginResponse = new BaseResponse<TokenUserBean>(0, "success", tokenUserBean);
 		}else{
-			loginResponse = new LoginResponse(1, "userName or passWord is not right", null);
+			loginResponse = new BaseResponse<TokenUserBean>(1, "userName or passWord is not right", null);
 		}
 		return loginResponse;
 	}
 	
 	@RequestMapping(value="/addUser", method=RequestMethod.POST)
-	public @ResponseBody RegisterResponse addUser(@Valid @ModelAttribute("user") UserBean userBean, BindingResult bindingResult){
-		RegisterResponse response = null;
+	public @ResponseBody BaseResponse<RegisterBean> addUser(@Valid @ModelAttribute("user") UserBean userBean, BindingResult bindingResult){
+		BaseResponse<RegisterBean> response = null;
 		if(bindingResult.hasErrors()){
 			FieldError fieldError = bindingResult.getFieldError();
 			String errFiled = fieldError.getField();
-			response = new RegisterResponse(1, fieldError.getCode(), errFiled);
+			RegisterBean registerBean = new RegisterBean();
+			registerBean.setErrField(errFiled);
+			response = new BaseResponse<RegisterBean>(1, fieldError.getCode(), registerBean);
 			return response;
 		}
 		String result = userService.addUser(userBean);
 		if(result.equals("succ")){
 			xmpp.register(userBean.getUserName(), userBean.getPassWord());
-			response = new RegisterResponse(0, "success", null);
+			response = new BaseResponse<RegisterBean>(0, "success", null);
 		}else{
-			response = new RegisterResponse(2, "user_already_existed", null);
+			response = new BaseResponse<RegisterBean>(2, "user_already_existed", null);
 		}
 		return response;
 	}
 	
 	@RequestMapping(value="/updateUser", method=RequestMethod.POST)
-	public @ResponseBody UserResponse updateUser(HttpServletRequest request,
+	public @ResponseBody BaseResponse<UserBean> updateUser(HttpServletRequest request,
 			@RequestParam("field") String field, @RequestParam("value") Object value){
-		UserResponse response = null;
+		BaseResponse<UserBean> response = null;
 		boolean canUpdate = true;
 		if(field.equals("") || field.equals(UserBean.USERNAME) || field.equals(UserBean.USERID)
 				|| field.equals(UserBean.CREATEDATE) || field.equals(UserBean.MODIFYDATE)){
-			response = new UserResponse(1, "refuse_modify", null);
+			response = new BaseResponse<UserBean>(1, "refuse_modify", null);
 			canUpdate = false;
 		}else if(field.equals(UserBean.PASSWORD)){
 			String passWord = (String) value;
 			if(passWord.length() < 6 || passWord.length() > 16){
-				response = new UserResponse(2, "modified_value_invalid", null);
+				response = new BaseResponse<UserBean>(2, "modified_value_invalid", null);
 				canUpdate = false;
 			}
 		}
@@ -107,15 +100,15 @@ public class UserController extends BaseController{
 		if(canUpdate){
 			String userName = (String) request.getAttribute("userName");
 			UserBean userBean = userService.updateUser(userName, field, value);
-			response = new UserResponse(0, "success", userBean);
+			response = new BaseResponse<UserBean>(0, "success", userBean);
 		}
 		
 		return response;
 	}
 	
 	@RequestMapping("/searchUser")
-	public @ResponseBody SearchUserResponse searchUser(@RequestParam("search") String search){
-		SearchUserResponse response = null;
+	public @ResponseBody BaseResponse<List<UserBean>> searchUser(@RequestParam("search") String search){
+		BaseResponse<List<UserBean>> response = null;
 		
 		if(search != null && !"".equals(search)){
 			List<UserBean> userBeans = userService.searchUser(UserBean.USERNAME, search);
@@ -124,9 +117,9 @@ public class UserController extends BaseController{
 					userBean.setPassWord(null);
 				}
 			}
-			response = new SearchUserResponse(0, "success", userBeans);
+			response = new BaseResponse<List<UserBean>>(0, "success", userBeans);
 		}else {
-			response = new SearchUserResponse(1, "param_invalid", null);
+			response = new BaseResponse<List<UserBean>>(1, "param_invalid", null);
 		}
 		
 		return response;
@@ -135,17 +128,17 @@ public class UserController extends BaseController{
 	/**
 	 * 客户端请求同步user表数据
 	 * @param request
-	 * @param userNames 客户端没有该用户信息的集合
+	 * @param userIds 客户端没有该用户信息的集合
 	 * @param modifyDate 客户端已存在的用户信息的modifyDate最大值
 	 * @return
 	 */
 	@RequestMapping("/syncUserData")
-	public @ResponseBody SyncUserResponse syncUser(HttpServletRequest request, 
-			@RequestParam(value = "userNames[]", required = false) String[] userNames, 
+	public @ResponseBody BaseResponse<List<UserBean>> syncUser(HttpServletRequest request, 
+			@RequestParam(value = "userIds[]", required = false) Integer[] userIds, 
 			@RequestParam("modifyDate") Long modifyDate){
 		Integer userId = (Integer) request.getAttribute(UserBean.USERID);
 		
-		List<UserBean> userBeans = userService.getUsersByNames(userNames);
+		List<UserBean> userBeans = userService.getUsersByIds(userIds);
 		List<UserBean> updatedData = userService.getUpdatedData(userId, modifyDate);
 	
 		if(userBeans != null && !userBeans.isEmpty()){
@@ -170,31 +163,37 @@ public class UserController extends BaseController{
 			
 		}
 		
-		SyncUserResponse response = new SyncUserResponse(0, "success", updatedData);
+		BaseResponse<List<UserBean>> response = new BaseResponse<List<UserBean>>(0, "success", updatedData);
 		return response;
 	}
 	
 	@RequestMapping("/queryUser")
-	public @ResponseBody UserResponse queryUser(@RequestParam("queryName") String queryName){
-		UserResponse userResponse = null;
+	public @ResponseBody BaseResponse<UserBean> queryUser(@RequestParam(value="userId", defaultValue="0") Integer userId,
+			@RequestParam(value="userName", defaultValue = "") String userName){
+		BaseResponse<UserBean> userResponse = null;
 		UserBean userBean = new UserBean();
-		userBean.setUserName(queryName);
+		if(userId != 0){
+			userBean.setUserId(userId);
+		}else {
+			userBean.setUserName(userName);
+		}
+		
 		userBean = userService.getUserByParams(userBean);
 		
 		if(userBean == null){
-			userResponse = new UserResponse(1, "user_not_exist", null);
+			userResponse = new BaseResponse<UserBean>(1, "user_not_exist", null);
 		}else{
-			userResponse = new UserResponse(0, "success", userBean);
+			userResponse = new BaseResponse<UserBean>(0, "success", userBean);
 		}
 		
 		return userResponse;		
 	}
 	
-	@RequestMapping("getUsersByNames")
-	public @ResponseBody UserListResponse getUsersByNames(@RequestParam(value = "userNames[]") String[] userNames){
-		List<UserBean> userBeans = userService.getUsersByNames(userNames);
-		UserListResponse response = new UserListResponse(0, "success", userBeans);
+	/*@RequestMapping("getUsersByNames")
+	public @ResponseBody BaseResponse<List<UserBean>> getUsersByNames(@RequestParam(value = "userNames[]") String[] userNames){
+		List<UserBean> userBeans = userService.getUsersByIds(userNames);
+		BaseResponse<List<UserBean>> response = new BaseResponse<List<UserBean>>(0, "success", userBeans);
 		
 		return response;
-	}
+	}*/
 }

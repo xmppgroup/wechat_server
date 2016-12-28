@@ -1,10 +1,14 @@
 package com.wangzhe.response;
 
-public class TokenResponse extends BaseResponse{
+public class TokenBean {
 	private String token;
 	
-	public TokenResponse(int code, String msg, String token) {
-		super(code, msg);
+	public TokenBean() {
+		// TODO Auto-generated constructor stub
+	}
+
+	public TokenBean(String token) {
+		super();
 		this.token = token;
 	}
 
@@ -17,5 +21,4 @@ public class TokenResponse extends BaseResponse{
 	}
 	
 	
-
 }

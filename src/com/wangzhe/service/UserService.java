@@ -23,5 +23,5 @@ public interface UserService {
 	public String getPhotoByUName(String uname);
 	public UserBean updateUser(String userName, String field, Object value);
 	public List<UserBean> getUpdatedData(Integer userId, long modifyDate);
-	public List<UserBean> getUsersByNames(String[] userNames);
+	public List<UserBean> getUsersByIds(Integer[] userIds);
 }

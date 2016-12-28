@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.wangzhe.bean.UserBean;
 import com.wangzhe.response.BaseResponse;
-import com.wangzhe.response.TokenResponse;
+import com.wangzhe.response.TokenBean;
 import com.wangzhe.util.keyUtil;
 
 @Service
@@ -40,8 +40,8 @@ public class TokenServiceImpl implements TokenService{
 	}
 	
 	@Transactional
-	public TokenResponse refreshToken(String token){
-		TokenResponse tokenResponse = null;
+	public BaseResponse<TokenBean> refreshToken(String token){
+		BaseResponse<TokenBean> baseResponse = null;
 		try {
 			@SuppressWarnings({ "unchecked", "rawtypes" })
 			Jwt<Header, Claims> jwt = Jwts.parser().setSigningKey(keyUtil.getPublicKey()).parse(token);
@@ -49,21 +49,22 @@ public class TokenServiceImpl implements TokenService{
 			String userName = (String) jwt.getBody().get(UserBean.USERNAME);
 			Long expTime = (Long) jwt.getBody().get("tokenExpired");
 			if(userId == null || expTime == null || !userService.isUserExist(userId)){
-				tokenResponse = new TokenResponse(1, "token_invalid", null);			
+				baseResponse = new BaseResponse<TokenBean>(1, "token_invalid", null);			
 			}else if(expTime < System.currentTimeMillis()){  //token已经过期了
-				tokenResponse = new TokenResponse(2, "token_expired", null);
+				baseResponse = new BaseResponse<TokenBean>(2, "token_expired", null);
 			}else {
 				String newToken = newToken(userId, userName);
-				tokenResponse = new TokenResponse(0, "success", newToken);
+				TokenBean tokenBean = new TokenBean(newToken);
+				baseResponse = new BaseResponse<TokenBean>(0, "success", tokenBean);
 			}
-			return tokenResponse;
+			return baseResponse;
 		}catch (SignatureException e) {
 			LOGGER.error(e.getMessage());
 		}catch (JwtException e) {
 			LOGGER.error(e.getMessage());
 		}
-		tokenResponse = new TokenResponse(2, "token_expired", null);
-		return tokenResponse;
+		baseResponse = new BaseResponse<TokenBean>(2, "token_expired", null);
+		return baseResponse;
 	}
 
 	@Transactional

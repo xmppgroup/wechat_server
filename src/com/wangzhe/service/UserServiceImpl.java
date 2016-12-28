@@ -129,11 +129,11 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Transactional
-	public List<UserBean> getUsersByNames(String[] userNames) {
-		if(userNames == null || userNames.length == 0){
+	public List<UserBean> getUsersByIds(Integer[] userIds) {
+		if(userIds == null || userIds.length == 0){
 			return null;
 		}
-		return userDao.getUsersByNames(userNames);
+		return userDao.getUsersByIds(userIds);
 	}
 	
 	

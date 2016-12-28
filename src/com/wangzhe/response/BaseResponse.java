@@ -1,7 +1,5 @@
 package com.wangzhe.response;
 
-import org.apache.log4j.varia.StringMatchFilter;
-
 public class BaseResponse<T> {
 	public static final int SERVER_ERROR = 500;
 	public static final int PARAM_MISS = 501;

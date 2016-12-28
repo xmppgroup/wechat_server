@@ -8,7 +8,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.wangzhe.response.TokenResponse;
+import com.wangzhe.response.BaseResponse;
+import com.wangzhe.response.TokenBean;
 import com.wangzhe.service.TokenService;
 import com.wangzhe.service.TokenServiceImpl;
 
@@ -18,8 +19,8 @@ public class TokenController extends BaseController{
 	private TokenService tokenService;
 
 	@RequestMapping(path = "/newToken")
-	public @ResponseBody TokenResponse refreshToken(@RequestParam("token") String oldToken){
-		TokenResponse tokenResponse = tokenService.refreshToken(oldToken);
+	public @ResponseBody BaseResponse<TokenBean> refreshToken(@RequestParam("token") String oldToken){
+		BaseResponse<TokenBean> tokenResponse = tokenService.refreshToken(oldToken);
 		return tokenResponse;
 	}
 }

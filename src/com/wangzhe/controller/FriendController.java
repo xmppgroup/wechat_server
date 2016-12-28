@@ -16,7 +16,6 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import com.wangzhe.bean.FriendBean;
 import com.wangzhe.bean.FriendBean.SubType;
 import com.wangzhe.response.BaseResponse;
-import com.wangzhe.response.GetFriendsResponse;
 import com.wangzhe.service.FriendService;
 
 @Controller
@@ -27,9 +26,9 @@ public class FriendController extends BaseController{
 	private FriendService friendService;
 	
 	@RequestMapping(value="/syncFriendData")
-	public @ResponseBody GetFriendsResponse getFriends(HttpServletRequest request, 
+	public @ResponseBody BaseResponse<List<FriendBean>> getFriends(HttpServletRequest request, 
 			@RequestParam(value = "modifyDate", required = false) Long modifyDate){
-		GetFriendsResponse response = null;
+		BaseResponse<List<FriendBean>> response = null;
 		Integer ownerId = (Integer) request.getAttribute("userId");
 
 		long lastModifyDate = 0;
@@ -37,7 +36,7 @@ public class FriendController extends BaseController{
 			lastModifyDate = modifyDate.longValue();
 		}catch(Exception e){}
 		List<FriendBean> friendBeans = friendService.getFriendsByOwner(ownerId, lastModifyDate);
-		response = new GetFriendsResponse(0, "success", friendBeans);
+		response = new BaseResponse<List<FriendBean>>(0, "success", friendBeans);
 
 		return response;
 	}

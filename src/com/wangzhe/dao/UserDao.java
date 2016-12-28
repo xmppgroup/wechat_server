@@ -84,11 +84,11 @@ public class UserDao extends DaoSupportImpl<UserBean> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<UserBean> getUsersByNames(String[] userNames){
-		SimpleExpression[] expressions = new SimpleExpression[userNames.length];
+	public List<UserBean> getUsersByIds(Integer[] userIds){
+		SimpleExpression[] expressions = new SimpleExpression[userIds.length];
 		
-		for(int i = 0 ; i < userNames.length; i++){
-			SimpleExpression expression = Restrictions.eq(UserBean.USERNAME, userNames[i]);
+		for(int i = 0 ; i < userIds.length; i++){
+			SimpleExpression expression = Restrictions.eq(UserBean.USERID, userIds[i]);
 			expressions[i] = expression;
 		}
 	

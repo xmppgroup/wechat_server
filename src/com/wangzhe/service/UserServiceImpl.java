@@ -91,6 +91,9 @@ public class UserServiceImpl implements UserService{
 	
 	@Transactional
 	public UserBean getUserByParams(UserBean user) {
+		if(user.getUserId() != null && user.getUserId() != 0){
+			return userDao.getObjById(user.getUserId());
+		}
 		return userDao.getTByParams(user);
 	}
 

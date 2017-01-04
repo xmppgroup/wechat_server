@@ -12,6 +12,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.hibernate.cfg.annotations.Nullability;
+
 
 /**
  * Created by 王宗文 on 2016/6/20.
@@ -40,6 +42,17 @@ public class CommentBean{
 		@Override
 		public String toString() {
 			return subType;
+		}
+		
+		public static Type valueOf(int value){
+			switch (value) {
+			case 0:
+				return COMMENT;
+			case 1:
+				return SUPPORT;
+			default:
+				return null;
+			}
 		}
 	}
 	

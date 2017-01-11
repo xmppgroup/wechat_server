@@ -196,12 +196,13 @@
 	    <artifactId>commons-fileupload</artifactId>
 	    <version>1.2.2</version>
 	</dependency>
-	<dependency>  
-        <groupId>javax.servlet</groupId>  
-        <artifactId>jstl</artifactId>  
-        <version>1.2</version>  
-        <scope>runtime</scope>  
-    </dependency> 
+	<!-- https://mvnrepository.com/artifact/org.apache.geronimo.javamail/geronimo-javamail_1.4_mail -->
+	<dependency>
+	    <groupId>org.apache.geronimo.javamail</groupId>
+	    <artifactId>geronimo-javamail_1.4_mail</artifactId>
+	    <version>1.2</version>
+	</dependency>
+
     <!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
 	<dependency>
 	    <groupId>commons-io</groupId>

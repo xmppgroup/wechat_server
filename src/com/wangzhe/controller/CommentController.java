@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -34,34 +35,34 @@ public class CommentController extends BaseController{
 	 */
 	@RequestMapping(value = "/addComment", method = RequestMethod.POST)
 	public @ResponseBody BaseResponse addComment(HttpServletRequest request,
-			@RequestParam(value="type", defaultValue="0") Integer type,
-			@RequestParam(value="content", defaultValue="") String content,
-			@RequestParam("dynamicId") Integer dynamicId){
+			@ModelAttribute("comment") CommentBean commentBean){
 		BaseResponse baseResponse = null;
 		int commentUserId = (Integer) request.getAttribute(UserBean.USERID);
-		if(type != 0 && type != 1){
+		String type = commentBean.getType();
+		if(CommentBean.Type.validOf(type) == null){
 			baseResponse = new BaseResponse(1, "type_invalid");
 			return baseResponse;
 		}
 		
-		if(type == 0){ //评论
+		if(type.equals(CommentBean.Type.COMMENT)){ //评论
+			String content = commentBean.getContent();
 			if("".equals(content) || "".equals(content.trim())){
 				baseResponse = new BaseResponse(2, "content_invalid");
 				return baseResponse;
 			}		
 		}
 		
+		int dynamicId = commentBean.getDynamicId();
 		DynamicBean dynamicBean = dynamicService.getDynamicById(dynamicId);
 		if(dynamicBean == null){
 			baseResponse = new BaseResponse(3, "failed");
 			return baseResponse;
 		}
 		
-		CommentBean commentBean = new CommentBean();
 		commentBean.setCommenterId(commentUserId);
-		commentBean.setType(CommentBean.Type.valueOf(type).toString());
-		commentBean.setDynamicId(dynamicId);
-		commentBean.setContent(content);
+		commentBean.setCommentId(null);
+		commentBean.setCreateDate(null);
+		commentBean.setModifyDate(null);
 		
 		commentService.addComment(commentBean);
 		baseResponse = new BaseResponse(0, "success");

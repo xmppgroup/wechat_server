@@ -25,6 +25,7 @@ public class CommentBean{
 	public static final String COMMENT_ID = "commentId";
 	public static final String COMMENTER_ID = "commenterId";
 	public static final String DYNAMIC_ID = "dynamicId";
+	public static final String REPLY_COMMENT_ID = "replyCommentId";
 	public static final String CONTENT = "content";
 	public static final String SUB_TYPE = "subType";
 	public static final String CREATE_DATE = "createDate";
@@ -44,16 +45,15 @@ public class CommentBean{
 			return subType;
 		}
 		
-		public static Type valueOf(int value){
-			switch (value) {
-			case 0:
-				return COMMENT;
-			case 1:
+		public static Type validOf(String type){
+			if("support".equals(type)){
 				return SUPPORT;
-			default:
-				return null;
+			}else if("comment".equals(type)){
+				return COMMENT;
 			}
+			return null;
 		}
+		
 	}
 	
 	@Id
@@ -61,6 +61,7 @@ public class CommentBean{
 	private Integer commentId;// 评论id
 	private Integer commenterId;// 评论人或者点赞人id
 	private Integer dynamicId;// 动态id
+	private Integer replyCommentId;//回复评论id
     private String type;//  类型
 	private String content;// 评论内容
     private Date createDate; //创建日期
@@ -127,5 +128,15 @@ public class CommentBean{
 	public void setModifyDate(BigInteger modifyDate) {
 		this.modifyDate = modifyDate;
 	}
+
+	public Integer getReplyCommentId() {
+		return replyCommentId;
+	}
+
+	public void setReplyCommentId(Integer replyCommentId) {
+		this.replyCommentId = replyCommentId;
+	}
+	
+	
 
 }

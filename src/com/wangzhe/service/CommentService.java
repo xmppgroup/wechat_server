@@ -6,5 +6,6 @@ import com.wangzhe.bean.CommentBean;
 import com.wangzhe.bean.DynamicBean;
 
 public interface CommentService {
-	public void addComment(CommentBean commentBean);
+	public Integer addComment(CommentBean commentBean);
+	public CommentBean getCommentById(Integer commentId);
 }

@@ -34,20 +34,20 @@ public class CommentController extends BaseController{
 	 * @return
 	 */
 	@RequestMapping(value = "/addComment", method = RequestMethod.POST)
-	public @ResponseBody BaseResponse addComment(HttpServletRequest request,
+	public @ResponseBody BaseResponse<CommentBean> addComment(HttpServletRequest request,
 			@ModelAttribute("comment") CommentBean commentBean){
-		BaseResponse baseResponse = null;
+		BaseResponse<CommentBean> baseResponse = null;
 		int commentUserId = (Integer) request.getAttribute(UserBean.USERID);
 		String type = commentBean.getType();
 		if(CommentBean.Type.validOf(type) == null){
-			baseResponse = new BaseResponse(1, "type_invalid");
+			baseResponse = new BaseResponse<CommentBean>(1, "type_invalid");
 			return baseResponse;
 		}
 		
 		if(type.equals(CommentBean.Type.COMMENT)){ //评论
 			String content = commentBean.getContent();
 			if("".equals(content) || "".equals(content.trim())){
-				baseResponse = new BaseResponse(2, "content_invalid");
+				baseResponse = new BaseResponse<CommentBean>(2, "content_invalid");
 				return baseResponse;
 			}		
 		}
@@ -55,7 +55,7 @@ public class CommentController extends BaseController{
 		int dynamicId = commentBean.getDynamicId();
 		DynamicBean dynamicBean = dynamicService.getDynamicById(dynamicId);
 		if(dynamicBean == null){
-			baseResponse = new BaseResponse(3, "failed");
+			baseResponse = new BaseResponse<CommentBean>(3, "failed");
 			return baseResponse;
 		}
 		
@@ -63,9 +63,10 @@ public class CommentController extends BaseController{
 		commentBean.setCommentId(null);
 		commentBean.setCreateDate(null);
 		commentBean.setModifyDate(null);
-		
-		commentService.addComment(commentBean);
-		baseResponse = new BaseResponse(0, "success");
+		int commentId = commentService.addComment(commentBean);
+
+		commentBean = commentService.getCommentById(commentId);
+		baseResponse = new BaseResponse(0, "success", commentBean);
 		return baseResponse;
 		
 	}

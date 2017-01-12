@@ -2,6 +2,7 @@ package com.wangzhe.service;
 
 import java.math.BigInteger;
 
+import com.wangzhe.dao.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,10 +16,22 @@ import com.wangzhe.util.TimeUtil;
 public class CommentServiceImpl implements CommentService{
 	@Autowired
 	private CommentDao commentDao;
+	@Autowired
+	private UserDao userDao;
 
 	@Transactional
-	public void addComment(CommentBean commentBean){
+	public Integer addComment(CommentBean commentBean){
 		commentBean.setModifyDate(BigInteger.valueOf(TimeUtil.getTime()));
-		commentDao.addObj(commentBean);
+		return commentDao.addObj(commentBean);
+	}
+
+	@Transactional
+	public CommentBean getCommentById(Integer commentId) {
+		CommentBean commentBean = commentDao.getObjById(commentId);
+		commentBean.setCommentUser(userDao.getObjById(commentBean.getCommenterId()));
+		if(commentBean.getReplyUserId() != null){
+			commentBean.setReplyUser(userDao.getObjById(commentBean.getReplyUserId()));
+		}
+		return commentBean;
 	}
 }

@@ -4,7 +4,6 @@ import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -12,7 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.wangzhe.util.CustomDateSerialize;
 
@@ -41,9 +39,7 @@ public class DynamicBean{
 	private Date createDate; //创建日期
 	private BigInteger modifyDate;///修改信息日期
 	@Transient
-	private UserBean user;//发布者
-	@Transient
-	private List<CommentBean> supportList; //点赞列表
+	private String publisherName;//发布者
 	@Transient
 	private List<CommentBean> commentList;//评论列表
 
@@ -109,20 +105,12 @@ public class DynamicBean{
 		this.modifyDate = modifyDate;
 	}
 
-	public UserBean getUser() {
-		return user;
+	public String getPublisherName() {
+		return publisherName;
 	}
 
-	public void setUser(UserBean user) {
-		this.user = user;
-	}
-
-	public List<CommentBean> getSupportList() {
-		return supportList;
-	}
-
-	public void setSupportList(List<CommentBean> supportList) {
-		this.supportList = supportList;
+	public void setPublisherName(String publisherName) {
+		this.publisherName = publisherName;
 	}
 
 	public List<CommentBean> getCommentList() {

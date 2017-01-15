@@ -21,7 +21,9 @@ public class DynamicServiceImpl implements DynamicService {
 	@Autowired
 	private DynamicDao dynamicDao;
 	@Autowired
-	private UserDao userDao;
+	private UserService userService;
+	@Autowired
+	private CommentService commentService;
 
 	@Transactional
 	public Integer addDynamicBean(DynamicBean dynamic) {
@@ -38,20 +40,23 @@ public class DynamicServiceImpl implements DynamicService {
 	@Transactional
 	public List<DynamicBean> getMyAndFriendDynamcis(Integer userId, int action,
 			int dynamicId, int limit) {
+		List<DynamicBean> dynamicBeanList;
 		if(action == ACTION_REFRESH){
-			List<DynamicBean> latestDynamics = 
+			dynamicBeanList =
 					dynamicDao.getLatestDynamicBeans(userId, limit);
-			if(dynamicId != 0 && latestDynamics != null && latestDynamics.size() > 0){
-				if(latestDynamics.get(0).getDynamicId() == dynamicId){
-					return null; //客户端传过来的id和查询到的id是一致的，说明没有新数据需要返回。
-				}
-			}
-			return latestDynamics;
 		}else {
-			List<DynamicBean> loadMoreDynamicBeans =
+			dynamicBeanList =
 					dynamicDao.getDynamisByPage(userId, dynamicId, limit);
-			return loadMoreDynamicBeans;
 		}
+
+		if(dynamicBeanList != null){
+			for(DynamicBean dynamicBean : dynamicBeanList){
+				dynamicBean.setPublisherName(userService.getShowName(dynamicBean.getPublisherId()));
+				dynamicBean.setCommentList(commentService.getCommentsByDynamicId(dynamicBean.getDynamicId()));
+			}
+		}
+
+		return dynamicBeanList;
 	}
 
 }

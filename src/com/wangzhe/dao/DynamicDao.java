@@ -40,6 +40,7 @@ public class DynamicDao extends DaoSupportImpl<DynamicBean>{
 		sqlQuery.setInteger(2, limit);
 		
 		sqlQuery.setResultTransformer(resultTransformer);
+
 		return sqlQuery.list();
 	}
 	

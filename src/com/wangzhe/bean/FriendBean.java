@@ -108,8 +108,6 @@ public class FriendBean{
 	public void setModifyDate(BigInteger modifyDate) {
 		this.modifyDate = modifyDate;
 	}
-    
-    
 
  
 }

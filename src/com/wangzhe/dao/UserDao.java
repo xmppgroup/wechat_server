@@ -12,6 +12,8 @@ import org.hibernate.criterion.Restrictions;
 import org.hibernate.criterion.SimpleExpression;
 import org.hibernate.transform.ResultTransformer;
 import org.hibernate.transform.Transformers;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 
 import com.wangzhe.bean.UserBean;
@@ -20,6 +22,7 @@ import com.wangzhe.util.TimeUtil;
 
 
 @Repository
+@CacheConfig(cacheNames = "cache_user")
 public class UserDao extends DaoSupportImpl<UserBean> {
 	private static final String GET_UPDATE_DATA =
 			"SELECT t.* FROM ( " +
@@ -35,7 +38,12 @@ public class UserDao extends DaoSupportImpl<UserBean> {
 		list = currentSession().createCriteria(UserBean.class).add(Restrictions.like(propName,value, MatchMode.ANYWHERE)).list();
 		return list;
 	}
-	
+
+	@Cacheable(key = "#id")
+	public UserBean getObjById(int id) {
+		return super.getObjById(id);
+	}
+
 	public boolean isUserExist(String userName){
 		Criteria criteria = currentSession().createCriteria(UserBean.class).add(Restrictions.eq(UserBean.USERNAME, userName));
 		if(criteria.list().size()>0){

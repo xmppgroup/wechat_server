@@ -63,9 +63,9 @@ public class CommentBean{
     private Date createDate; //创建日期
     private BigInteger modifyDate;///修改信息日期
     @Transient
-	private UserBean commentUser;//评论人或者点赞人
+	private String commentUserName;//评论人或者点赞人
 	@Transient
-	private UserBean replyUser; //回复用户
+	private String replyUserName; //回复用户
 
     public CommentBean(){
 
@@ -135,19 +135,19 @@ public class CommentBean{
 		this.replyUserId = replyUserId;
 	}
 
-	public UserBean getCommentUser() {
-		return commentUser;
+	public String getCommentUserName() {
+		return commentUserName;
 	}
 
-	public void setCommentUser(UserBean commentUser) {
-		this.commentUser = commentUser;
+	public void setCommentUserName(String commentUserName) {
+		this.commentUserName = commentUserName;
 	}
 
-	public UserBean getReplyUser() {
-		return replyUser;
+	public String getReplyUserName() {
+		return replyUserName;
 	}
 
-	public void setReplyUser(UserBean replyUser) {
-		this.replyUser = replyUser;
+	public void setReplyUserName(String replyUserName) {
+		this.replyUserName = replyUserName;
 	}
 }

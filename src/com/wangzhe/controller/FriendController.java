@@ -4,10 +4,8 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.http.util.TextUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -49,7 +47,7 @@ public class FriendController extends BaseController{
 		if(ownerId == null || contactId == null){
 			baseResponse = new BaseResponse(1, "invalid_conactname");
 		}else {
-			if(friendService.isFriends(ownerId, contactId)){
+			if(friendService.isBothFriends(ownerId, contactId)){
 				baseResponse = new BaseResponse(2, "have_been_friends");
 			}else {
 				friendService.addOrUpdateFriends(ownerId, contactId, null, SubType.BOTH);

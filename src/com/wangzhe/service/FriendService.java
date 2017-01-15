@@ -12,5 +12,9 @@ public interface FriendService {
 	
 	public void addOrUpdateFriends(Integer ownerId, Integer contactId, String remark, SubType subType);
 	
-	public boolean isFriends(Integer ownerId, Integer contactId);
+	public boolean isBothFriends(Integer ownerId, Integer contactId);
+
+	public FriendBean getFriendByOwnerAndContact(Integer ownerId, Integer contactId);
+	//获取联系人名字，如果remark不为NULL，则remark.否则从user表中去取
+	public String getContactName(Integer ownerId, Integer contactId);
 }

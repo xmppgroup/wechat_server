@@ -1,5 +1,6 @@
 package com.wangzhe.bean;
 
+import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.Date;
 
@@ -21,7 +22,7 @@ import com.wangzhe.util.CustomDateSerialize;
 @Entity
 @Table(name="wcuser")
 @JsonIgnoreProperties(value = "passWord")
-public class UserBean {
+public class UserBean implements Serializable{
 	
 	public static final String USERID = "userId";
 	public static final String USERNAME = "userName";

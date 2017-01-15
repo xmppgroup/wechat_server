@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="http://ehcache.org/ehcache.xsd">
+    <!-- 指定一个文件目录，当EhCache把数据写到硬盘上时，将把数据写到这个文件目录下 -->
+    <diskStore path="java.io.tmpdir"/>
+
+    <!-- 设定缓存的默认数据过期策略 -->
+    <defaultCache
+            maxElementsInMemory="1000"
+            eternal="false"
+            overflowToDisk="false"
+            diskPersistent="false"
+            timeToIdleSeconds="604800"
+            timeToLiveSeconds="604800"
+            memoryStoreEvictionPolicy="LRU"/>
+
+    <cache
+            name="cache_user"
+            maxElementsInMemory="1000"
+            eternal="false"
+            overflowToDisk="false"
+            diskPersistent="false"
+            timeToIdleSeconds="604800"
+            timeToLiveSeconds="604800"
+            memoryStoreEvictionPolicy="LRU"/>
+    <cache
+            name="cache_friend"
+            maxElementsInMemory="1000"
+            eternal="false"
+            overflowToDisk="false"
+            diskPersistent="false"
+            timeToIdleSeconds="604800"
+            timeToLiveSeconds="604800"
+            memoryStoreEvictionPolicy="LRU"/>
+    <cache
+            name="cache_comment"
+            maxElementsInMemory="1000"
+            eternal="false"
+            overflowToDisk="false"
+            diskPersistent="false"
+            timeToIdleSeconds="604800"
+            timeToLiveSeconds="604800"
+            memoryStoreEvictionPolicy="LRU"/>
+</ehcache>

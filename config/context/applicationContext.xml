@@ -6,6 +6,7 @@
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:aop="http://www.springframework.org/schema/aop"
        xmlns:tx="http://www.springframework.org/schema/tx"
+	   xmlns:cache="http://www.springframework.org/schema/cache"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
 			http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
 			http://www.springframework.org/schema/context 
@@ -17,7 +18,9 @@
 			http://www.springframework.org/schema/mvc 
 			http://www.springframework.org/schema/mvc/spring-mvc-4.2.xsd
 			http://www.springframework.org/schema/context 
-			http://www.springframework.org/schema/context/spring-context-4.2.xsd">
+			http://www.springframework.org/schema/context/spring-context-4.2.xsd
+	  		http://www.springframework.org/schema/cache
+			http://www.springframework.org/schema/cache/spring-cache-4.2.xsd">
     <!--
         使Spring支持自动检测组件，如注解的Controller
     -->
@@ -91,5 +94,15 @@
 	     class="org.springframework.orm.hibernate4.HibernateTransactionManager">
 		<property name="sessionFactory" ref="sessionFactory"></property>
 	</bean>
-         
+
+	<cache:annotation-driven proxy-target-class="true"/>
+
+	<bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
+		<property name="cacheManager" ref="ehcache" />
+	</bean>
+
+	<bean id="ehcache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean" p:shared="true">
+		<property name="configLocation" value="classpath:context/ehcache-setting.xml"></property>
+	</bean>
+
 </beans>

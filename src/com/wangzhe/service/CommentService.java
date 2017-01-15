@@ -8,4 +8,5 @@ import com.wangzhe.bean.DynamicBean;
 public interface CommentService {
 	public Integer addComment(CommentBean commentBean);
 	public CommentBean getCommentById(Integer commentId);
+	public List<CommentBean> getCommentsByDynamicId(Integer dynamicId);
 }

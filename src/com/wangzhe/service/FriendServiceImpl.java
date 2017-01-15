@@ -6,8 +6,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.wangzhe.bean.UserBean;
+import com.wangzhe.dao.UserDao;
 import org.apache.http.util.TextUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,9 +22,12 @@ import com.wangzhe.dao.base.WhereItem;
 import com.wangzhe.util.TimeUtil;
 
 @Service
+@Transactional
 public class FriendServiceImpl implements FriendService{
 	@Autowired
 	private FriendDao friendDao;
+	@Autowired
+	private UserService userService;
 
 	@Transactional
 	public List<FriendBean> getFriendsByOwner(Integer ownerId, long modifyDate) {
@@ -52,13 +58,25 @@ public class FriendServiceImpl implements FriendService{
 		}
 			
 	}
-	
-	@Transactional
-	public boolean isFriends(Integer ownerId, Integer contactId){
+
+	public boolean isBothFriends(Integer ownerId, Integer contactId){
 		if(ownerId == null || contactId == null){
 			return false;
 		}
 		return friendDao.getFriendByOwnerAndContact(ownerId, contactId, SubType.BOTH) != null;
+	}
+
+	public FriendBean getFriendByOwnerAndContact(Integer ownerId, Integer contactId) {
+		return friendDao.getFriendByOwnerAndContact(ownerId, contactId);
+	}
+
+	public String getContactName(Integer ownerId, Integer contactId) {
+		FriendBean friendBean = getFriendByOwnerAndContact(ownerId, contactId);
+		if(friendBean.getRemark() != null && !"".equals(friendBean.getRemark())){
+			return friendBean.getRemark();
+		}else {
+			return userService.getShowName(contactId);
+		}
 	}
 
 

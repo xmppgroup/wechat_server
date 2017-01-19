@@ -35,6 +35,7 @@ public class UserServiceImpl implements UserService{
 
 	public String getShowName(int userId) {
 		UserBean userBean = getUserById(userId);
+		if(userBean == null) return null;
 		return TextUtils.isEmpty(userBean.getNickName()) ? userBean.getUserName() : userBean.getNickName();
 	}
 

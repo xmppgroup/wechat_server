@@ -43,7 +43,7 @@ public class CommentServiceImpl implements CommentService{
 		if(commentBeanList != null){
 			for (CommentBean commentBean : commentBeanList){
 				commentBean.setCommentUserName(userService.getShowName(commentBean.getCommenterId()));
-				if(commentBean.getReplyUserId() != null){
+				if(commentBean.getReplyUserId() != null && 0 != commentBean.getReplyUserId()){
 					commentBean.setReplyUserName(friendService.getContactName(commentBean.getCommenterId(),
 							commentBean.getReplyUserId()));
 				}

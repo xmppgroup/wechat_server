@@ -36,8 +36,8 @@ public class keyUtil {
 	
 	static{
 		if(Config.isDebug()){
-			PRI_KEY_FILE_PATH = "D:\\priKey.pem";
-			PUB_KEY_FILE_PATH = "D:\\pubKey.pem";
+			PRI_KEY_FILE_PATH = "E:\\priKey.pem";
+			PUB_KEY_FILE_PATH = "E:\\pubKey.pem";
 		}else {
 			PRI_KEY_FILE_PATH = "/usr/wangzhe/priKey.pem";
 			PUB_KEY_FILE_PATH = "/usr/wangzhe/pubKey.pem";

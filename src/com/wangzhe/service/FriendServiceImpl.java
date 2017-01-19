@@ -72,7 +72,7 @@ public class FriendServiceImpl implements FriendService{
 
 	public String getContactName(Integer ownerId, Integer contactId) {
 		FriendBean friendBean = getFriendByOwnerAndContact(ownerId, contactId);
-		if(friendBean.getRemark() != null && !"".equals(friendBean.getRemark())){
+		if(friendBean != null && friendBean.getRemark() != null && !"".equals(friendBean.getRemark())){
 			return friendBean.getRemark();
 		}else {
 			return userService.getShowName(contactId);

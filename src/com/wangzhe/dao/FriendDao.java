@@ -25,7 +25,7 @@ public class FriendDao extends DaoSupportImpl<FriendBean>{
 					"ELSE wf.remark END contactName from wcfriend wf, wcuser wu " +
 					"WHERE wf.ownerId = ? AND wf.contactId = wu.userId AND wf.contactId = ?;";*/
 
-	@Cacheable(key = "#{ownerId + '_' + contactId}")
+	@Cacheable(key = "#ownerId + '_' + #contactId")
 	public FriendBean getFriendByOwnerAndContact(Integer ownerId, Integer contactId){
 		return getFriendByOwnerAndContact(ownerId, contactId, null);
 	}

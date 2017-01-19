@@ -78,7 +78,7 @@ public class DynamicController extends BaseController{
 		
 		List<DynamicBean> dynamicBeans = 
 				dynamicService.getMyAndFriendDynamcis(userId, action, dynamicId, limit);
-		BaseResponse<List<DynamicBean>> baseResponse = 
+		BaseResponse<List<DynamicBean>> baseResponse =
 				new BaseResponse<List<DynamicBean>>(0, "success", dynamicBeans);
 		return baseResponse;
 	}

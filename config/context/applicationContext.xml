@@ -45,7 +45,7 @@
    		<mvc:interceptor>
    			<mvc:mapping path="/*"/>
    			<mvc:exclude-mapping path="/addUser"/>
-   			<mvc:exclude-mapping path="/login"/> 
+   			<mvc:exclude-mapping path="/login"/>
    			<bean class="com.wangzhe.interceptor.DefaultInterceptor"></bean>
    		</mvc:interceptor>
    	</mvc:interceptors> 

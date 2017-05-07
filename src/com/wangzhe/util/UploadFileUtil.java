@@ -19,16 +19,15 @@ public class UploadFileUtil {
 		}
 	}
 	
-	public static List<String> saveFile(MultipartHttpServletRequest multiRequest) 
-			throws IllegalStateException, IOException{
+	public static List<String> saveFile(MultipartHttpServletRequest multiRequest) throws IllegalStateException, IOException{
 		 //取得request中的所有文件名  
-        Iterator<String> iter = multiRequest.getFileNames();  
+        Iterator<String> iter = multiRequest.getFileNames();
         List<String> fileNameS = new ArrayList<String>();
         while(iter.hasNext()){  
             //记录上传过程起始时的时间，用来计算上传时间  
             int pre = (int) System.currentTimeMillis();  
             //取得上传文件  
-            MultipartFile file = multiRequest.getFile(iter.next());  
+            MultipartFile file = multiRequest.getFile(iter.next());
             if(file != null){  
                 //取得当前上传文件的文件名称  
                 String myFileName = file.getOriginalFilename();  
@@ -36,7 +35,9 @@ public class UploadFileUtil {
                 if(myFileName.trim() !=""){                                 	                   	                
                     //定义上传路径  
                    	String path = FILE_PATH + myFileName;                   
-                    File localFile = new File(path);  
+                    File localFile = new File(path);
+                    if (!localFile.getParentFile().exists())
+                        localFile.getParentFile().mkdirs();
                     file.transferTo(localFile); 
                     
                     fileNameS.add(myFileName);

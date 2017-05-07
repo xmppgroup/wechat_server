@@ -26,53 +26,58 @@ import com.wangzhe.util.UploadFileUtil;
 
 @EnableWebMvc
 @Controller
-public class UploadFileController extends BaseController{
-	@Autowired
-	private UserService userService;
-	
-	private static final String FILE_PATH;
-	static{
-		if(Config.isDebug()){
-			FILE_PATH = "D:\\upload/";
-		}else {
-			FILE_PATH = "/usr/wangzhe/upload/";
-		}
-	}
-	
-	
-	@RequestMapping(path = "/uploadAvatar")
-	public @ResponseBody BaseResponse<UserBean> uploadAvatar(HttpServletRequest request) throws IllegalStateException, IOException{
-		BaseResponse<UserBean> response = null;
-		
-		String userName = (String) request.getAttribute(UserBean.USERNAME);
-		 //创建一个通用的多部分解析器  
-        CommonsMultipartResolver multipartResolver = 
-        		new CommonsMultipartResolver(request.getSession().getServletContext());  
-        //判断 request 是否有文件上传,即多部分请求  
-        if(multipartResolver.isMultipart(request)){  
-            //转换成多部分request    
-            MultipartHttpServletRequest multiRequest = multipartResolver.resolveMultipart(request);
-            
-            List<String> fileNames = UploadFileUtil.saveFile(multiRequest);
-              
-            UserBean updateUserBean = 
-            		userService.updateUser(userName, UserBean.HEADURL, fileNames.get(0));
-            response = new BaseResponse<UserBean>(0, "success", updateUserBean);
+public class UploadFileController extends BaseController {
+    @Autowired
+    private UserService userService;
+
+    private static final String FILE_PATH;
+
+    static {
+        if (Config.isDebug()) {
+            FILE_PATH = "D:\\upload/";
+        } else {
+            FILE_PATH = "/usr/wangzhe/upload/";
         }
-        
+    }
+
+
+    @RequestMapping(path = "/uploadAvatar")
+    public
+    @ResponseBody
+    BaseResponse<UserBean> uploadAvatar(HttpServletRequest request) {
+        BaseResponse<UserBean> response = null;
+        String userName = (String) request.getAttribute(UserBean.USERNAME);
+
+        try {
+            //创建一个通用的多部分解析器
+            CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver(request.getSession().getServletContext());
+            //判断 request 是否有文件上传,即多部分请求
+            if (multipartResolver.isMultipart(request)) {
+                //转换成多部分request
+                MultipartHttpServletRequest multiRequest = multipartResolver.resolveMultipart(request);
+                List<String> fileNames = UploadFileUtil.saveFile(multiRequest);
+                UserBean updateUserBean = userService.updateUser(userName, UserBean.HEADURL, fileNames.get(0));
+                response = new BaseResponse<UserBean>(0, "success", updateUserBean);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            response = new BaseResponse<UserBean>(1, "服务器错误", null);
+
+        }
+
         return response;
-	}
-	
-	private String getNewFileName(String userName, String oldFileName){
-		String nowTime = System.currentTimeMillis() + "";
-		
-		String newFileName;
-		if(oldFileName.length() < 8){
-			newFileName = oldFileName;
-		}else{
-			newFileName = oldFileName.substring(oldFileName.length() - 8);
-		}
-		return userName + "_" + nowTime.substring(nowTime.length() - 6) + "_" + newFileName;
-	}
+    }
+
+    private String getNewFileName(String userName, String oldFileName) {
+        String nowTime = System.currentTimeMillis() + "";
+
+        String newFileName;
+        if (oldFileName.length() < 8) {
+            newFileName = oldFileName;
+        } else {
+            newFileName = oldFileName.substring(oldFileName.length() - 8);
+        }
+        return userName + "_" + nowTime.substring(nowTime.length() - 6) + "_" + newFileName;
+    }
 
 }

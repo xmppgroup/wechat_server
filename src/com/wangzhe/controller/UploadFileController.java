@@ -9,6 +9,8 @@ import java.util.Random;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,6 +31,7 @@ import com.wangzhe.util.UploadFileUtil;
 public class UploadFileController extends BaseController {
     @Autowired
     private UserService userService;
+    private static final Logger LOGGER = LoggerFactory.getLogger(UploadFileController.class);
 
     private static final String FILE_PATH;
 
@@ -60,7 +63,7 @@ public class UploadFileController extends BaseController {
                 response = new BaseResponse<UserBean>(0, "success", updateUserBean);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error("upload file error: " + e.getMessage());
             response = new BaseResponse<UserBean>(1, "服务器错误", null);
 
         }

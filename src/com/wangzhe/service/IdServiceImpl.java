@@ -23,7 +23,7 @@ public class IdServiceImpl {
     private IdDao idDao;
 
     public IdServiceImpl(){
-        int updateTimeType = IdBean.IdType.UPDATE_TIME.value;
+        int updateTimeType = IdBean.IdType.MODIFY_DATE.value;
         map.put(updateTimeType, new IdBean(updateTimeType, 5));
     }
 

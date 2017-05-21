@@ -65,7 +65,7 @@ public class IdBean {
     }
 
     public enum IdType{
-        UPDATE_TIME(1);
+        MODIFY_DATE(1);
         public int value;
         IdType(int value){
             this.value = value;

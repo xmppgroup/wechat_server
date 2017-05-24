@@ -1,16 +1,11 @@
 package com.wangzhe.service;
 
-import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.http.util.TextUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,16 +19,26 @@ import com.wangzhe.util.TimeUtil;
 public class UserServiceImpl implements UserService{
 	@Autowired
 	private UserDao userDao;
+	@Autowired
+	private UserPropertyService userPropertyService;
 		
 	public List<UserBean> getAllUser() {
 		return userDao.getAll();
 	}
 
 	public UserBean getUserById(int userId) {
-		return userDao.getObjById(userId);
+		return getUserById(userId, 0);
 	}
 
-	public String getShowName(int userId) {
+    public UserBean getUserById(int userId, long properModifyDate) {
+	    UserBean userBean = userDao.getUserById(userId);
+	    if(userBean != null){
+            userBean.setUserProperties(userPropertyService.getPropertiesByUserId(userId));
+        }
+        return userBean;
+    }
+
+    public String getShowName(int userId) {
 		UserBean userBean = getUserById(userId);
 		if(userBean == null) return null;
 		return TextUtils.isEmpty(userBean.getNickName()) ? userBean.getUserName() : userBean.getNickName();
@@ -52,7 +57,7 @@ public class UserServiceImpl implements UserService{
 		List<UserBean> list = new ArrayList<UserBean>();
 		for(int i=0; i<ids.length; i++){
 			int id = Integer.parseInt(ids[i]);
-			UserBean user = userDao.getObjById(id);
+			UserBean user = userDao.getUserById(id);
 			list.add(user);
 		}
 		return list;
@@ -78,7 +83,7 @@ public class UserServiceImpl implements UserService{
 
 	public UserBean getUserByParams(UserBean user) {
 		if(user.getUserId() != null && user.getUserId() != 0){
-			return userDao.getObjById(user.getUserId());
+			return userDao.getUserById(user.getUserId());
 		}
 		return userDao.getTByParams(user);
 	}

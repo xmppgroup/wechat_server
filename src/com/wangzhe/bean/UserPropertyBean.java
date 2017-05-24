@@ -1,9 +1,8 @@
 package com.wangzhe.bean;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import java.math.BigInteger;
-import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import javax.persistence.*;
 
 /**
  * Created by Administrator on 2017/5/17.
@@ -12,21 +11,15 @@ import java.util.Date;
 @Entity
 @Table(name = "wcuserproperty")
 public class UserPropertyBean {
+    public static final String USER_ID = "userId";
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonIgnore
+    private Integer id;
+    @JsonIgnore
     private Integer userId;
     private String key;
     private String value;
-    private BigInteger modifyDate;
-
-    public UserPropertyBean(){
-
-    }
-
-    public UserPropertyBean(Integer userId, String key, String value, BigInteger modifyDate) {
-        this.userId = userId;
-        this.key = key;
-        this.value = value;
-        this.modifyDate = modifyDate;
-    }
 
     public Integer getUserId() {
         return userId;
@@ -52,11 +45,11 @@ public class UserPropertyBean {
         this.value = value;
     }
 
-    public BigInteger getModifyDate() {
-        return modifyDate;
+    public Integer getId() {
+        return id;
     }
 
-    public void setModifyDate(BigInteger modifyDate) {
-        this.modifyDate = modifyDate;
+    public void setId(Integer id) {
+        this.id = id;
     }
 }

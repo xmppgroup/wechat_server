@@ -1,8 +1,6 @@
 package com.wangzhe.bean;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 
 /**
  * Created by Administrator on 2017/5/17.
@@ -10,6 +8,7 @@ import javax.persistence.Transient;
 @Entity
 @Table(name = "wcid")
 public class IdBean {
+    @Id
     public Integer idType;
     public Long id;
     @Transient

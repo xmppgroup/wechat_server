@@ -3,6 +3,7 @@ package com.wangzhe.bean;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -57,6 +58,8 @@ public class UserBean implements Serializable{
     @JsonSerialize(using = CustomDateSerialize.class)
     private Date createDate; //创建账号日期
     private BigInteger modifyDate; //修改信息日期
+    @Transient
+    private List<UserPropertyBean> userProperties;
 
     public UserBean(){
 
@@ -177,7 +180,12 @@ public class UserBean implements Serializable{
 		this.modifyDate = modifyDate;
 	}
 
-    
-   
+    public List<UserPropertyBean> getUserProperties() {
+        return userProperties;
+    }
 
+    public UserBean setUserProperties(List<UserPropertyBean> userProperties) {
+        this.userProperties = userProperties;
+        return this;
+    }
 }

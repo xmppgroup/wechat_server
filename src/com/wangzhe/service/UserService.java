@@ -9,6 +9,7 @@ public interface UserService {
 	public List<UserBean> getAllUser();
 	public List<UserBean> searchUser(String propName,String value);
 	public UserBean getUserById(int userTd);
+	public UserBean getUserById(int userId, long properModifyDate);
 	// 获取用户展示名，nickName == null ? userName : nickName
 	public String getShowName(int userId);
 	public List<UserBean> getUsersByPaging(Paging paging);

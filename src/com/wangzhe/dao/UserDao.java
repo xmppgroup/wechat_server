@@ -40,7 +40,7 @@ public class UserDao extends DaoSupportImpl<UserBean> {
 	}
 
 	@Cacheable(key = "#id")
-	public UserBean getObjById(int id) {
+	public UserBean getUserById(int id) {
 		return super.getObjById(id);
 	}
 

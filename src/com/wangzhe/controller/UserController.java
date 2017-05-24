@@ -188,12 +188,4 @@ public class UserController extends BaseController{
 		
 		return userResponse;		
 	}
-	
-	/*@RequestMapping("getUsersByNames")
-	public @ResponseBody BaseResponse<List<UserBean>> getUsersByNames(@RequestParam(value = "userNames[]") String[] userNames){
-		List<UserBean> userBeans = userService.getUsersByIds(userNames);
-		BaseResponse<List<UserBean>> response = new BaseResponse<List<UserBean>>(0, "success", userBeans);
-		
-		return response;
-	}*/
 }

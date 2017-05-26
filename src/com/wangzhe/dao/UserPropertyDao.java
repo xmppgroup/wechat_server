@@ -18,7 +18,7 @@ public class UserPropertyDao extends DaoSupportImpl<UserPropertyBean> {
     }
 
     public void addOrUpdateProperties(UserPropertyBean... userPropertyBeans){
-        StringBuilder sqlBuilder = new StringBuilder("insert or replace into wcuserproperty(userId, key, value) values ");
+        StringBuilder sqlBuilder = new StringBuilder("replace into wcuserproperty(userId, `key`, `value`) values ");
         for(UserPropertyBean userPropertyBean : userPropertyBeans){
             sqlBuilder.append("(\"").append(userPropertyBean.getUserId()).append("\", \"")
                     .append(userPropertyBean.getKey()).append("\", \"")

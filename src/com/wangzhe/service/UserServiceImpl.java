@@ -83,9 +83,14 @@ public class UserServiceImpl implements UserService{
 
 	public UserBean getUserByParams(UserBean user) {
 		if(user.getUserId() != null && user.getUserId() != 0){
-			return userDao.getUserById(user.getUserId());
+			return getUserById(user.getUserId());
 		}
-		return userDao.getTByParams(user);
+
+		UserBean userBean = userDao.getTByParams(user);
+        if(userBean != null){
+            userBean.setUserProperties(userPropertyService.getPropertiesByUserId(userBean.getUserId()));
+        }
+		return userBean;
 	}
 
 	public UserBean updateUser(String userName, String field, Object value) {
